@@ -1,0 +1,1902 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --navy: #0f1f3d;
+    --navy2: #162847;
+    --blue: #1a6ef5;
+    --blue-light: #3b82f6;
+    --cyan: #06b6d4;
+    --gold: #f59e0b;
+    --green: #10b981;
+    --red: #ef4444;
+    --orange: #f97316;
+    --purple: #8b5cf6;
+    --surface: #1e2d4a;
+    --surface2: #243451;
+    --surface3: #2d3f60;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --font: 'Sora', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+    --radius: 12px;
+    --radius2: 8px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  #app {
+    font-family: var(--font);
+    background: var(--navy);
+    color: var(--text);
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ── AUTH ── */
+  .auth-wrap {
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0a1628 0%, #0f1f3d 50%, #162847 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .auth-wrap::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(26,110,245,0.12) 0%, transparent 70%);
+    top: -100px; left: -100px;
+    pointer-events: none;
+  }
+  .auth-wrap::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%);
+    bottom: -80px; right: -80px;
+    pointer-events: none;
+  }
+  .auth-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow);
+    position: relative;
+    z-index: 1;
+  }
+  .auth-logo {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .auth-logo-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 28px;
+  }
+  .auth-logo h1 { font-size: 15px; font-weight: 600; color: var(--text); }
+  .auth-logo p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  .auth-tab-row { display: flex; background: var(--navy); border-radius: 10px; padding: 4px; margin-bottom: 24px; }
+  .auth-tab { flex: 1; padding: 8px; text-align: center; border-radius: 7px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text2); transition: all 0.2s; border: none; background: none; }
+  .auth-tab.active { background: var(--blue); color: #fff; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 10px 14px; background: var(--navy);
+    border: 1px solid var(--border2); border-radius: var(--radius2);
+    color: var(--text); font-family: var(--font); font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--blue); }
+  .form-group select option { background: var(--navy); }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .btn { padding: 10px 20px; border-radius: var(--radius2); font-family: var(--font); font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+  .btn-primary { background: var(--blue); color: #fff; width: 100%; justify-content: center; }
+  .btn-primary:hover { background: var(--blue-light); }
+  .btn-sm { padding: 6px 14px; font-size: 12px; }
+  .btn-ghost { background: transparent; border: 1px solid var(--border2); color: var(--text2); }
+  .btn-ghost:hover { border-color: var(--blue); color: var(--text); }
+  .btn-danger { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .btn-danger:hover { background: rgba(239,68,68,0.25); }
+  .btn-success { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.3); }
+  .btn-success:hover { background: rgba(16,185,129,0.25); }
+
+  .otp-link { text-align: center; margin-top: 12px; font-size: 12px; color: var(--text2); }
+  .otp-link a { color: var(--blue); cursor: pointer; text-decoration: none; }
+
+  /* ── LAYOUT ── */
+  .layout { display: flex; min-height: 600px; }
+
+  .sidebar {
+    width: 240px; min-width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+  }
+  .sidebar-brand {
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-brand-icon {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; margin-bottom: 10px;
+  }
+  .sidebar-brand h2 { font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .sidebar-brand p { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  .sidebar-user {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600; flex-shrink: 0;
+  }
+  .sidebar-user-info h4 { font-size: 13px; font-weight: 500; }
+  .sidebar-user-info p { font-size: 11px; color: var(--text2); }
+
+  .sidebar-nav { flex: 1; padding: 12px 8px; }
+  .nav-section { margin-bottom: 20px; }
+  .nav-section-label { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; padding: 0 8px; margin-bottom: 6px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px; border-radius: 8px; cursor: pointer;
+    color: var(--text2); font-size: 13px; font-weight: 400;
+    transition: all 0.15s; margin-bottom: 2px;
+    border: 1px solid transparent;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: rgba(26,110,245,0.15); color: var(--blue-light); border-color: rgba(26,110,245,0.2); }
+  .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+  .nav-badge { margin-left: auto; background: var(--red); color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 99px; }
+
+  .sidebar-footer { padding: 12px 8px; border-top: 1px solid var(--border); }
+
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  .topbar {
+    height: 56px; background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 12px; flex-shrink: 0;
+  }
+  .topbar-title { font-size: 16px; font-weight: 600; flex: 1; }
+  .topbar-search { position: relative; }
+  .topbar-search input {
+    background: var(--navy); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 7px 12px 7px 32px;
+    color: var(--text); font-family: var(--font); font-size: 13px;
+    width: 180px; outline: none;
+  }
+  .topbar-search input:focus { border-color: var(--blue); width: 220px; transition: width 0.2s; }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 14px; }
+
+  .page { flex: 1; overflow-y: auto; padding: 24px; }
+
+  /* ── STATS ── */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    top: -20px; right: -20px;
+    opacity: 0.15;
+  }
+  .stat-card.blue::before { background: var(--blue); }
+  .stat-card.green::before { background: var(--green); }
+  .stat-card.gold::before { background: var(--gold); }
+  .stat-card.purple::before { background: var(--purple); }
+  .stat-icon { font-size: 20px; margin-bottom: 12px; }
+  .stat-value { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+  .stat-label { font-size: 12px; color: var(--text2); }
+  .stat-trend { font-size: 11px; margin-top: 6px; }
+  .stat-trend.up { color: var(--green); }
+  .stat-trend.down { color: var(--red); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .card-title { font-size: 14px; font-weight: 600; }
+  .card-subtitle { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  td { padding: 11px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  .td-name { font-weight: 500; }
+  .td-id { font-family: var(--mono); font-size: 11px; color: var(--text2); }
+
+  /* ── BADGE ── */
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 500; }
+  .badge-blue { background: rgba(26,110,245,0.15); color: #60a5fa; }
+  .badge-green { background: rgba(16,185,129,0.15); color: #34d399; }
+  .badge-red { background: rgba(239,68,68,0.15); color: #f87171; }
+  .badge-gold { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .badge-purple { background: rgba(139,92,246,0.15); color: #a78bfa; }
+  .badge-gray { background: rgba(148,163,184,0.1); color: var(--text2); }
+
+  /* ── PROGRESS ── */
+  .progress-bar { height: 6px; background: var(--surface3); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width 0.5s; }
+
+  /* ── FORM ROW ── */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 20px;
+  }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 28px;
+    width: 100%; max-width: 560px;
+    max-height: 80vh; overflow-y: auto;
+    box-shadow: var(--shadow);
+  }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 20px; gap: 4px; }
+  .tab { padding: 8px 16px; cursor: pointer; font-size: 13px; font-weight: 500; color: var(--text2); border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .tab.active { color: var(--blue-light); border-bottom-color: var(--blue); }
+  .tab:hover { color: var(--text); }
+
+  /* ── STUDENT PROFILE ── */
+  .profile-header {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 28px;
+    display: flex; align-items: center; gap: 24px;
+    margin-bottom: 20px;
+    position: relative; overflow: hidden;
+  }
+  .profile-header::before {
+    content: '';
+    position: absolute;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(26,110,245,0.1) 0%, transparent 70%);
+    top: -60px; right: -60px;
+  }
+  .profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; flex-shrink: 0; border: 3px solid rgba(255,255,255,0.1); }
+  .profile-info h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .profile-info p { font-size: 13px; color: var(--text2); margin-bottom: 8px; }
+  .profile-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ── ANNOUNCEMENT ── */
+  .ann-item { padding: 14px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 10px; background: var(--surface2); }
+  .ann-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .ann-type { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .ann-date { font-size: 11px; color: var(--text3); margin-left: auto; }
+  .ann-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .ann-body { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* ── ATTENDANCE CALENDAR ── */
+  .att-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .att-day { aspect-ratio: 1; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; cursor: default; }
+  .att-day.present { background: rgba(16,185,129,0.2); color: #34d399; }
+  .att-day.absent { background: rgba(239,68,68,0.2); color: #f87171; }
+  .att-day.leave { background: rgba(245,158,11,0.2); color: #fbbf24; }
+  .att-day.empty { background: transparent; }
+  .att-day.future { background: var(--surface3); color: var(--text3); }
+  .att-day-label { font-size: 10px; color: var(--text3); text-align: center; padding: 4px 0; }
+
+  /* ── MARKS TABLE ── */
+  .grade-pill { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+  .grade-A\+ { background: rgba(16,185,129,0.2); color: #34d399; }
+  .grade-A { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+  .grade-B { background: rgba(26,110,245,0.15); color: #60a5fa; }
+  .grade-C { background: rgba(245,158,11,0.15); color: #fbbf24; }
+  .grade-D { background: rgba(249,115,22,0.15); color: #fb923c; }
+  .grade-F { background: rgba(239,68,68,0.15); color: #f87171; }
+
+  /* ── FEE CARD ── */
+  .fee-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .fee-amount { font-size: 22px; font-weight: 700; margin: 4px 0; }
+  .fee-label { font-size: 11px; color: var(--text2); }
+
+  /* ── ID CARD ── */
+  .id-card {
+    background: linear-gradient(135deg, #0f1f3d 0%, #162847 50%, #1a2f5a 100%);
+    border: 2px solid rgba(26,110,245,0.4);
+    border-radius: 16px;
+    padding: 24px;
+    width: 280px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .id-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--blue), var(--cyan), var(--purple)); }
+  .id-card-logo { font-size: 11px; font-weight: 600; color: var(--blue-light); margin-bottom: 16px; }
+  .id-card-photo { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--purple)); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; margin-bottom: 12px; border: 2px solid rgba(255,255,255,0.1); }
+  .id-card-name { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
+  .id-card-class { font-size: 11px; color: var(--blue-light); margin-bottom: 12px; }
+  .id-card-field { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
+  .id-card-field-label { color: var(--text2); }
+  .id-card-field-val { font-weight: 500; font-family: var(--mono); }
+  .id-card-bottom { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); font-size: 10px; color: var(--text3); text-align: center; }
+  .qr-block { width: 48px; height: 48px; background: #fff; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 24px; float: right; margin-left: 10px; }
+
+  /* ── CHART ── */
+  .mini-chart { height: 80px; display: flex; align-items: flex-end; gap: 4px; padding-top: 8px; }
+  .bar { flex: 1; border-radius: 4px 4px 0 0; min-width: 12px; transition: opacity 0.2s; position: relative; }
+  .bar:hover { opacity: 0.85; }
+  .bar-label { font-size: 9px; color: var(--text3); text-align: center; margin-top: 4px; }
+
+  /* ── CALENDAR ── */
+  .cal-event { padding: 8px 12px; border-radius: 8px; border-left: 3px solid; margin-bottom: 8px; }
+  .cal-event.exam { border-color: var(--blue); background: rgba(26,110,245,0.08); }
+  .cal-event.holiday { border-color: var(--green); background: rgba(16,185,129,0.08); }
+  .cal-event.event { border-color: var(--purple); background: rgba(139,92,246,0.08); }
+
+  /* ── LOADING ── */
+  .spinner { width: 20px; height: 20px; border: 2px solid var(--border2); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.6s linear infinite; display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── ALERT ── */
+  .alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+  .alert-error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
+  .alert-success { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); color: #6ee7b7; }
+  .alert-info { background: rgba(26,110,245,0.1); border: 1px solid rgba(26,110,245,0.25); color: #93c5fd; }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .section-title { font-size: 18px; font-weight: 700; }
+
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text2); }
+  .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+
+  .otp-inputs { display: flex; gap: 8px; justify-content: center; margin: 16px 0; }
+  .otp-box { width: 44px; height: 52px; text-align: center; font-size: 20px; font-weight: 700; background: var(--navy); border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-family: var(--mono); outline: none; }
+  .otp-box:focus { border-color: var(--blue); }
+
+  .checkbox-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; cursor: pointer; font-size: 13px; color: var(--text2); }
+  .checkbox-row input { width: 16px; height: 16px; accent-color: var(--blue); cursor: pointer; }
+
+  .divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+  /* ── NOTIFICATION DOT ── */
+  .notif-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; position: absolute; top: -2px; right: -2px; }
+
+  .info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .info-item { padding: 12px; background: var(--surface2); border-radius: 8px; }
+  .info-label { font-size: 11px; color: var(--text2); margin-bottom: 4px; }
+  .info-value { font-size: 13px; font-weight: 500; }
+
+  /* Chart bars */
+  .chart-container { position: relative; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 100px; }
+  .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .chart-bar { width: 100%; border-radius: 4px 4px 0 0; }
+  .chart-bar-label { font-size: 9px; color: var(--text3); }
+  .chart-bar-val { font-size: 9px; font-weight: 600; }
+
+  .action-row { display: flex; gap: 8px; flex-wrap: wrap; }
+</style>
+
+<div id="app"></div>
+
+<script>
+// ── State ──────────────────────────────────────────────────
+let state = {
+  view: 'login',
+  user: null,
+  activeNav: 'dashboard',
+  modal: null,
+  search: '',
+  notification: null,
+
+  // Demo data
+  students: [
+    { id:1, student_id:'JECR-24-1001', first_name:'Ahmad', last_name:'Raza', email:'ahmad@demo.com', class_name:'Class 10', batch_name:'Morning Batch', gender:'male', roll_number:'01', parent_name:'Muhammad Raza', parent_contact:'0300-1234567', student_contact:'0311-9876543', admission_date:'2024-01-15', date_of_birth:'2008-05-12', attendance_pct:94, total_fee:15000, paid_fee:15000, home_address:'Radhan, Punjab' },
+    { id:2, student_id:'JECR-24-1002', first_name:'Fatima', last_name:'Khan', email:'fatima@demo.com', class_name:'Class 10', batch_name:'Evening Batch', gender:'female', roll_number:'02', parent_name:'Imran Khan', parent_contact:'0301-2345678', student_contact:'0312-8765432', admission_date:'2024-01-20', date_of_birth:'2008-08-22', attendance_pct:88, total_fee:15000, paid_fee:12000, home_address:'Radhan, Punjab' },
+    { id:3, student_id:'JECR-24-1003', first_name:'Usman', last_name:'Ali', email:'usman@demo.com', class_name:'Class 9', batch_name:'Morning Batch', gender:'male', roll_number:'03', parent_name:'Ali Hassan', parent_contact:'0302-3456789', student_contact:'0313-7654321', admission_date:'2024-02-01', date_of_birth:'2009-03-15', attendance_pct:76, total_fee:12000, paid_fee:8000, home_address:'Radhan, Punjab' },
+    { id:4, student_id:'JECR-24-1004', first_name:'Ayesha', last_name:'Malik', email:'ayesha@demo.com', class_name:'Class 8', batch_name:'Evening Batch', gender:'female', roll_number:'04', parent_name:'Akhtar Malik', parent_contact:'0303-4567890', student_contact:'0314-6543210', admission_date:'2024-02-10', date_of_birth:'2010-11-30', attendance_pct:98, total_fee:10000, paid_fee:10000, home_address:'Radhan, Punjab' },
+    { id:5, student_id:'JECR-24-1005', first_name:'Hassan', last_name:'Butt', email:'hassan@demo.com', class_name:'Class 9', batch_name:'Morning Batch', gender:'male', roll_number:'05', parent_name:'Tariq Butt', parent_contact:'0304-5678901', student_contact:'0315-5432109', admission_date:'2024-03-05', date_of_birth:'2009-07-08', attendance_pct:82, total_fee:12000, paid_fee:12000, home_address:'Radhan, Punjab' },
+  ],
+  classes: [
+    { id:1, name:'Class 8', student_count:8, batches:['Morning Batch','Evening Batch'], subjects:['Mathematics','Science','English','Urdu','Social Studies'] },
+    { id:2, name:'Class 9', student_count:15, batches:['Morning Batch','Evening Batch'], subjects:['Mathematics','Physics','Chemistry','English','Urdu','Biology'] },
+    { id:3, name:'Class 10', student_count:22, batches:['Morning Batch','Evening Batch'], subjects:['Mathematics','Physics','Chemistry','English','Urdu','Biology','Computer'] },
+    { id:4, name:'Class 11', student_count:10, batches:['Morning Batch'], subjects:['Mathematics','Physics','Chemistry','English','Urdu'] },
+  ],
+  announcements: [
+    { id:1, title:'Annual Exam Schedule Announced', content:'Annual examinations will begin from March 15, 2025. Students are requested to prepare accordingly. Timetable will be shared next week.', type:'exam', created_at:'2025-01-20', created_by_email:'admin@jecr.edu.pk' },
+    { id:2, title:'Fee Submission Deadline – February', content:'All students must submit their monthly fee by February 10, 2025. Late fee of Rs. 100 will be charged after the deadline.', type:'fee', created_at:'2025-01-18', created_by_email:'admin@jecr.edu.pk' },
+    { id:3, title:'Welcome to New Session 2025', content:'We welcome all students to the new academic session. The coaching center will be open Monday to Saturday, 8 AM to 6 PM.', type:'general', created_at:'2025-01-10', created_by_email:'admin@jecr.edu.pk' },
+  ],
+  attendance_data: {
+    1: { // student id
+      '2025-01-01':'present','2025-01-02':'present','2025-01-03':'absent','2025-01-04':'present','2025-01-05':'leave',
+      '2025-01-06':'present','2025-01-07':'present','2025-01-08':'present','2025-01-09':'absent','2025-01-10':'present',
+      '2025-01-11':'present','2025-01-12':'present','2025-01-13':'present','2025-01-14':'present','2025-01-15':'present',
+    }
+  },
+  marks: [
+    { student_id:1, subject:'Mathematics', exam:'Mid-Term 2024', obtained:88, total:100, grade:'A', percentage:88 },
+    { student_id:1, subject:'Physics', exam:'Mid-Term 2024', obtained:76, total:100, grade:'B', percentage:76 },
+    { student_id:1, subject:'Chemistry', exam:'Mid-Term 2024', obtained:91, total:100, grade:'A+', percentage:91 },
+    { student_id:1, subject:'English', exam:'Mid-Term 2024', obtained:72, total:100, grade:'B', percentage:72 },
+    { student_id:1, subject:'Urdu', exam:'Mid-Term 2024', obtained:85, total:100, grade:'A', percentage:85 },
+    { student_id:1, subject:'Biology', exam:'Mid-Term 2024', obtained:79, total:100, grade:'B', percentage:79 },
+  ],
+  fees: [
+    { student_id:1, fee_type:'Monthly Fee', amount:3000, paid_amount:3000, status:'paid', due_date:'2024-12-10', paid_date:'2024-12-08', receipt_number:'RCP-001', month_year:'2024-12' },
+    { student_id:1, fee_type:'Monthly Fee', amount:3000, paid_amount:3000, status:'paid', due_date:'2025-01-10', paid_date:'2025-01-07', receipt_number:'RCP-002', month_year:'2025-01' },
+    { student_id:1, fee_type:'Monthly Fee', amount:3000, paid_amount:0, status:'pending', due_date:'2025-02-10', paid_date:null, receipt_number:'RCP-003', month_year:'2025-02' },
+    { student_id:1, fee_type:'Exam Fee', amount:1500, paid_amount:1500, status:'paid', due_date:'2024-11-01', paid_date:'2024-10-30', receipt_number:'RCP-004', month_year:'2024-11' },
+  ],
+  calendar: [
+    { id:1, title:'Mid-Term Exams', event_type:'exam', start_date:'2025-02-10', end_date:'2025-02-20', description:'Mid-term examination for all classes' },
+    { id:2, title:'Pakistan Day', event_type:'holiday', start_date:'2025-03-23', description:'National Holiday – Pakistan Day' },
+    { id:3, title:'Parent-Teacher Meeting', event_type:'event', start_date:'2025-02-28', description:'Monthly PTM for all classes' },
+    { id:4, title:'Annual Exams', event_type:'exam', start_date:'2025-03-15', end_date:'2025-03-30', description:'Annual examinations for all classes' },
+  ],
+  settings: {
+    center_name: 'Jhatail Educational Coaching Center Radhan',
+    contact_number: '+92-300-1234567',
+    email: 'info@jecr.edu.pk',
+    website: 'www.jecr.edu.pk',
+    address: 'Radhan, Punjab, Pakistan',
+    facebook: 'fb.com/jecr',
+    whatsapp: '+92-300-1234567',
+    established_year: '2024'
+  }
+};
+
+let showPassword = false;
+let forgotStep = 1; // 1=email, 2=otp, 3=new password
+let loginTab = 'admin'; // admin | student
+let activeTab = 'overview';
+let addStudentModal = false;
+let addAnnouncementModal = false;
+let addCalendarModal = false;
+let viewStudentId = null;
+let generateIdCardId = null;
+let markAttendanceModal = false;
+let addFeeModal = false;
+let enterMarksModal = false;
+let settingsTab = 'general';
+let selectedClassFilter = '';
+
+// ── Render ─────────────────────────────────────────────────
+function render() {
+  const app = document.getElementById('app');
+  if (state.view === 'login') { app.innerHTML = renderLogin(); bindLogin(); }
+  else if (state.view === 'forgot') { app.innerHTML = renderForgot(); bindForgot(); }
+  else if (state.view === 'app') { app.innerHTML = renderApp(); bindApp(); }
+}
+
+// ── LOGIN ──────────────────────────────────────────────────
+function renderLogin() {
+  return `
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🏫</div>
+        <h1>Jhatail Educational Coaching Center</h1>
+        <p>Radhan, Punjab — Management System</p>
+      </div>
+      <div class="auth-tab-row">
+        <button class="auth-tab ${loginTab==='admin'?'active':''}" onclick="loginTab='admin';render()">👨‍💼 Admin Login</button>
+        <button class="auth-tab ${loginTab==='student'?'active':''}" onclick="loginTab='student';render()">🎓 Student Login</button>
+      </div>
+      <div id="login-alert"></div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="login-email" placeholder="${loginTab==='admin'?'admin@jecr.edu.pk':'student@jecr.edu.pk'}" value="${loginTab==='admin'?'admin@jecr.edu.pk':'ahmad@demo.com'}">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="${showPassword?'text':'password'}" id="login-pass" placeholder="Enter password" value="Admin@123">
+      </div>
+      <label class="checkbox-row">
+        <input type="checkbox" id="show-pass" ${showPassword?'checked':''} onchange="showPassword=this.checked;render()">
+        Show password
+      </label>
+      <label class="checkbox-row">
+        <input type="checkbox" id="remember-me">
+        Remember me
+      </label>
+      <button class="btn btn-primary" id="login-btn">🔐 Sign In Securely</button>
+      <div class="otp-link" style="margin-top:16px">
+        <a onclick="state.view='forgot';forgotStep=1;render()">Forgot Password?</a>
+      </div>
+      <div class="divider"></div>
+      <div style="background:rgba(26,110,245,0.08);border:1px solid rgba(26,110,245,0.2);border-radius:8px;padding:12px;font-size:11px;color:#93c5fd">
+        <strong>Demo:</strong> Use pre-filled credentials above to explore the system
+      </div>
+    </div>
+  </div>`;
+}
+
+function bindLogin() {
+  document.getElementById('login-btn').onclick = () => {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const alert = document.getElementById('login-alert');
+
+    if (loginTab === 'admin' && email.includes('admin')) {
+      state.user = { role: 'super_admin', email, name: 'Center Admin' };
+      state.view = 'app'; state.activeNav = 'dashboard'; render();
+    } else if (loginTab === 'student' || email.includes('ahmad') || email.includes('demo')) {
+      state.user = { role: 'student', email, name: 'Ahmad Raza', studentId: 1 };
+      state.view = 'app'; state.activeNav = 'dashboard'; render();
+    } else {
+      alert.innerHTML = '<div class="alert alert-error">⚠️ Invalid email or password</div>';
+    }
+  };
+}
+
+// ── FORGOT PASSWORD ────────────────────────────────────────
+function renderForgot() {
+  let content = '';
+  if (forgotStep === 1) {
+    content = `
+      <div class="form-group">
+        <label>Registered Email</label>
+        <input type="email" id="fp-email" placeholder="Enter your email address">
+      </div>
+      <button class="btn btn-primary" id="fp-btn">📧 Send OTP</button>`;
+  } else if (forgotStep === 2) {
+    content = `
+      <div class="alert alert-info">📬 OTP sent to your email. Valid for 5 minutes.</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:16px;text-align:center">Enter the 6-digit OTP</p>
+      <div class="otp-inputs">
+        ${[0,1,2,3,4,5].map(i=>`<input class="otp-box" maxlength="1" id="otp-${i}" oninput="moveOtp(${i})" onkeydown="backOtp(event,${i})">`).join('')}
+      </div>
+      <button class="btn btn-primary" id="fp-btn" style="margin-top:8px">✅ Verify OTP</button>
+      <div class="otp-link"><a onclick="forgotStep=1;render()">← Resend OTP</a></div>`;
+  } else {
+    content = `
+      <div class="alert alert-success">✅ OTP verified. Set your new password.</div>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" id="fp-pass1" placeholder="Min 8 chars, uppercase, number, symbol">
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input type="password" id="fp-pass2" placeholder="Re-enter new password">
+      </div>
+      <button class="btn btn-primary" id="fp-btn">🔒 Reset Password</button>`;
+  }
+
+  return `
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">${forgotStep===1?'📧':forgotStep===2?'🔑':'🔒'}</div>
+        <h1>${forgotStep===1?'Forgot Password':forgotStep===2?'Verify OTP':'Reset Password'}</h1>
+        <p>${forgotStep===1?'Enter your email to receive OTP':forgotStep===2?'Check your email for the OTP':'Create a strong new password'}</p>
+      </div>
+      <div id="fp-alert"></div>
+      ${content}
+      <div class="otp-link" style="margin-top:16px"><a onclick="state.view='login';render()">← Back to Login</a></div>
+    </div>
+  </div>`;
+}
+
+function moveOtp(i) {
+  const val = document.getElementById(`otp-${i}`).value;
+  if (val && i < 5) document.getElementById(`otp-${i+1}`).focus();
+}
+function backOtp(e, i) {
+  if (e.key === 'Backspace' && !document.getElementById(`otp-${i}`).value && i > 0) document.getElementById(`otp-${i-1}`).focus();
+}
+
+function bindForgot() {
+  const btn = document.getElementById('fp-btn');
+  if (!btn) return;
+  btn.onclick = () => {
+    if (forgotStep === 1) { forgotStep = 2; render(); }
+    else if (forgotStep === 2) {
+      const otp = [0,1,2,3,4,5].map(i=>document.getElementById(`otp-${i}`)?.value||'').join('');
+      if (otp.length === 6) { forgotStep = 3; render(); }
+      else document.getElementById('fp-alert').innerHTML = '<div class="alert alert-error">Enter all 6 digits</div>';
+    } else {
+      const p1 = document.getElementById('fp-pass1')?.value;
+      const p2 = document.getElementById('fp-pass2')?.value;
+      if (p1 !== p2) { document.getElementById('fp-alert').innerHTML = '<div class="alert alert-error">Passwords do not match</div>'; return; }
+      state.view = 'login'; render();
+      setTimeout(() => { document.getElementById('login-alert').innerHTML = '<div class="alert alert-success">✅ Password reset successfully. Please login.</div>'; }, 100);
+    }
+  };
+}
+
+// ── MAIN APP ───────────────────────────────────────────────
+function renderApp() {
+  const isAdmin = state.user.role === 'super_admin';
+  return `
+  <div class="layout">
+    ${renderSidebar(isAdmin)}
+    <div class="main">
+      ${renderTopbar()}
+      <div class="page" id="page-content">
+        ${renderPage()}
+      </div>
+    </div>
+  </div>
+  ${renderModal()}`;
+}
+
+function renderSidebar(isAdmin) {
+  const adminNav = [
+    { section: 'Main', items: [
+      { id:'dashboard', icon:'📊', label:'Dashboard' },
+      { id:'students', icon:'👨‍🎓', label:'Students' },
+      { id:'classes', icon:'🏛️', label:'Classes & Batches' },
+    ]},
+    { section: 'Academic', items: [
+      { id:'attendance', icon:'📋', label:'Attendance' },
+      { id:'marks', icon:'📝', label:'Marks & Results' },
+      { id:'fees', icon:'💳', label:'Fee Management' },
+    ]},
+    { section: 'Communication', items: [
+      { id:'announcements', icon:'📢', label:'Announcements' },
+      { id:'calendar', icon:'📅', label:'Academic Calendar' },
+    ]},
+    { section: 'Admin', items: [
+      { id:'reports', icon:'📈', label:'Analytics & Reports' },
+      { id:'settings', icon:'⚙️', label:'Center Settings' },
+      { id:'audit', icon:'🔍', label:'Audit Logs' },
+    ]},
+  ];
+  const studentNav = [
+    { section: 'My Portal', items: [
+      { id:'dashboard', icon:'🏠', label:'My Dashboard' },
+      { id:'profile', icon:'👤', label:'My Profile' },
+      { id:'attendance', icon:'📋', label:'My Attendance' },
+      { id:'marks', icon:'📝', label:'My Results' },
+      { id:'fees', icon:'💳', label:'My Fees' },
+    ]},
+    { section: 'Info', items: [
+      { id:'announcements', icon:'📢', label:'Announcements' },
+      { id:'calendar', icon:'📅', label:'Academic Calendar' },
+    ]},
+  ];
+  const nav = isAdmin ? adminNav : studentNav;
+  return `
+  <div class="sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">🏫</div>
+      <h2>JECR</h2>
+      <p>Coaching Center Radhan</p>
+    </div>
+    <div class="sidebar-user">
+      <div class="avatar">${state.user.name.charAt(0)}</div>
+      <div class="sidebar-user-info">
+        <h4>${state.user.name}</h4>
+        <p>${isAdmin ? '👑 Super Admin' : '🎓 Student'}</p>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      ${nav.map(section => `
+        <div class="nav-section">
+          <div class="nav-section-label">${section.section}</div>
+          ${section.items.map(item => `
+            <div class="nav-item ${state.activeNav===item.id?'active':''}" onclick="navigate('${item.id}')">
+              <span class="nav-icon">${item.icon}</span>
+              <span>${item.label}</span>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
+    </nav>
+    <div class="sidebar-footer">
+      <div class="nav-item" onclick="state.view='login';render()" style="color:var(--red)">
+        <span class="nav-icon">🚪</span> Logout
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderTopbar() {
+  const titles = { dashboard:'Dashboard', students:'Students', classes:'Classes & Batches', attendance:'Attendance Management', marks:'Marks & Results', fees:'Fee Management', announcements:'Announcements', calendar:'Academic Calendar', reports:'Analytics & Reports', settings:'Center Settings', audit:'Audit Logs', profile:'My Profile' };
+  return `
+  <div class="topbar">
+    <div class="topbar-title">${titles[state.activeNav] || 'Dashboard'}</div>
+    ${state.user.role==='super_admin' ? `
+    <div class="topbar-search">
+      <span class="search-icon">🔍</span>
+      <input placeholder="Search students..." id="global-search" value="${state.search}" oninput="state.search=this.value;updatePage()">
+    </div>` : ''}
+    <div style="font-size:12px;color:var(--text2)">${new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short',year:'numeric'})}</div>
+    <div style="position:relative">
+      <span style="font-size:20px;cursor:pointer" onclick="navigate('dashboard')">🔔</span>
+      <div class="notif-dot"></div>
+    </div>
+  </div>`;
+}
+
+function renderPage() {
+  const isAdmin = state.user.role === 'super_admin';
+  switch(state.activeNav) {
+    case 'dashboard': return isAdmin ? renderAdminDashboard() : renderStudentDashboard();
+    case 'students': return renderStudents();
+    case 'classes': return renderClasses();
+    case 'attendance': return isAdmin ? renderAdminAttendance() : renderStudentAttendance();
+    case 'marks': return isAdmin ? renderAdminMarks() : renderStudentMarks();
+    case 'fees': return isAdmin ? renderAdminFees() : renderStudentFees();
+    case 'announcements': return renderAnnouncements();
+    case 'calendar': return renderCalendar();
+    case 'reports': return renderReports();
+    case 'settings': return renderSettings();
+    case 'audit': return renderAudit();
+    case 'profile': return renderStudentProfile();
+    default: return renderAdminDashboard();
+  }
+}
+
+// ── ADMIN DASHBOARD ────────────────────────────────────────
+function renderAdminDashboard() {
+  const totalStudents = state.students.length;
+  const totalFee = state.fees.reduce((a,f)=>a+f.amount,0);
+  const paidFee = state.fees.reduce((a,f)=>a+f.paid_amount,0);
+  const avgAtt = Math.round(state.students.reduce((a,s)=>a+s.attendance_pct,0)/state.students.length);
+  const feeMonths = ['Aug','Sep','Oct','Nov','Dec','Jan'];
+  const feeVals = [45000,52000,48000,61000,55000,70000];
+  const maxFee = Math.max(...feeVals);
+
+  return `
+  <div class="stats-grid">
+    <div class="stat-card blue">
+      <div class="stat-icon">👨‍🎓</div>
+      <div class="stat-value">${totalStudents}</div>
+      <div class="stat-label">Total Students</div>
+      <div class="stat-trend up">↑ 3 this month</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon">🏛️</div>
+      <div class="stat-value">${state.classes.length}</div>
+      <div class="stat-label">Active Classes</div>
+      <div class="stat-trend up">↑ All running</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-icon">💰</div>
+      <div class="stat-value">₨ ${(paidFee/1000).toFixed(0)}K</div>
+      <div class="stat-label">Fee Collected</div>
+      <div class="stat-trend up">↑ ${Math.round(paidFee/totalFee*100)}% collection rate</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value">${avgAtt}%</div>
+      <div class="stat-label">Avg Attendance</div>
+      <div class="stat-trend ${avgAtt>85?'up':'down'}">${avgAtt>85?'↑':'↓'} ${avgAtt>85?'Good':'Needs attention'}</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">📈 Fee Collection</div>
+          <div class="card-subtitle">Last 6 months</div>
+        </div>
+      </div>
+      <div class="chart-bars">
+        ${feeMonths.map((m,i)=>`
+          <div class="chart-bar-wrap">
+            <div class="chart-bar-val" style="font-size:9px;color:var(--text2)">${(feeVals[i]/1000).toFixed(0)}K</div>
+            <div class="chart-bar" style="height:${Math.round(feeVals[i]/maxFee*80)}px;background:${i===5?'var(--blue)':'rgba(26,110,245,0.35)'}"></div>
+            <div class="chart-bar-label">${m}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">📊 Attendance by Class</div>
+          <div class="card-subtitle">Current month</div>
+        </div>
+      </div>
+      ${state.classes.map((c,i)=>{
+        const pcts = [92,87,94,89];
+        return `
+        <div style="margin-bottom:12px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+            <span>${c.name}</span><span style="font-weight:600">${pcts[i]}%</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${pcts[i]}%;background:${pcts[i]>90?'var(--green)':pcts[i]>80?'var(--blue)':'var(--gold)'}"></div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">👨‍🎓 Recent Students</div>
+        <button class="btn btn-ghost btn-sm" onclick="navigate('students')">View All</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Class</th><th>Attendance</th><th>Fee</th></tr></thead>
+          <tbody>
+            ${state.students.slice(0,4).map(s=>`
+              <tr style="cursor:pointer" onclick="viewStudent(${s.id})">
+                <td>
+                  <div class="td-name">${s.first_name} ${s.last_name}</div>
+                  <div class="td-id">${s.student_id}</div>
+                </td>
+                <td>${s.class_name}</td>
+                <td><span class="badge ${s.attendance_pct>90?'badge-green':s.attendance_pct>75?'badge-blue':'badge-red'}">${s.attendance_pct}%</span></td>
+                <td><span class="badge ${s.paid_fee>=s.total_fee?'badge-green':'badge-gold'}">${s.paid_fee>=s.total_fee?'Paid':'Partial'}</span></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📢 Recent Announcements</div>
+        <button class="btn btn-ghost btn-sm" onclick="navigate('announcements')">View All</button>
+      </div>
+      ${state.announcements.slice(0,3).map(a=>`
+        <div class="ann-item">
+          <div class="ann-header">
+            <span class="badge ${a.type==='exam'?'badge-blue':a.type==='fee'?'badge-gold':'badge-green'}">${a.type}</span>
+            <span class="ann-date">${a.created_at}</span>
+          </div>
+          <div class="ann-title">${a.title}</div>
+          <div class="ann-body">${a.content.substring(0,80)}...</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ── STUDENTS ───────────────────────────────────────────────
+function renderStudents() {
+  const filtered = state.students.filter(s =>
+    !state.search || `${s.first_name} ${s.last_name} ${s.student_id} ${s.email}`.toLowerCase().includes(state.search.toLowerCase())
+  ).filter(s => !selectedClassFilter || s.class_name === selectedClassFilter);
+
+  return `
+  <div class="section-header">
+    <div class="section-title">Students (${filtered.length})</div>
+    <div class="action-row">
+      <select style="padding:8px 12px;background:var(--navy);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font);font-size:13px;outline:none" onchange="selectedClassFilter=this.value;render()">
+        <option value="">All Classes</option>
+        ${state.classes.map(c=>`<option value="${c.name}" ${selectedClassFilter===c.name?'selected':''}>${c.name}</option>`).join('')}
+      </select>
+      <button class="btn btn-primary btn-sm" onclick="addStudentModal=true;render()">+ Add Student</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Student</th><th>Class / Batch</th><th>Contact</th><th>Attendance</th><th>Fee Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          ${filtered.length ? filtered.map((s,i)=>`
+            <tr>
+              <td style="color:var(--text2);font-size:11px">${i+1}</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="avatar" style="width:32px;height:32px;font-size:12px">${s.first_name.charAt(0)}</div>
+                  <div>
+                    <div class="td-name">${s.first_name} ${s.last_name}</div>
+                    <div class="td-id">${s.student_id} · Roll #${s.roll_number}</div>
+                  </div>
+                </div>
+              </td>
+              <td>${s.class_name}<br><span style="font-size:11px;color:var(--text2)">${s.batch_name}</span></td>
+              <td style="font-size:12px">${s.student_contact||'—'}</td>
+              <td><span class="badge ${s.attendance_pct>90?'badge-green':s.attendance_pct>75?'badge-blue':'badge-red'}">${s.attendance_pct}%</span></td>
+              <td><span class="badge ${s.paid_fee>=s.total_fee?'badge-green':s.paid_fee>0?'badge-gold':'badge-red'}">${s.paid_fee>=s.total_fee?'✓ Paid':s.paid_fee>0?'Partial':'Pending'}</span></td>
+              <td>
+                <div class="action-row">
+                  <button class="btn btn-ghost btn-sm" onclick="viewStudent(${s.id})">👁️</button>
+                  <button class="btn btn-ghost btn-sm" onclick="generateIdCard(${s.id})">🪪</button>
+                  <button class="btn btn-danger btn-sm" onclick="deleteStudent(${s.id})">🗑️</button>
+                </div>
+              </td>
+            </tr>`).join('') : `<tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🔍</div><p>No students found</p></div></td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── CLASSES ────────────────────────────────────────────────
+function renderClasses() {
+  return `
+  <div class="section-header">
+    <div class="section-title">Classes & Batches</div>
+    <button class="btn btn-primary btn-sm" onclick="showAlert('Add Class feature — connect to backend API')">+ Add Class</button>
+  </div>
+  <div class="grid-2">
+    ${state.classes.map(c=>`
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">🏛️ ${c.name}</div>
+            <div class="card-subtitle">${c.student_count} students enrolled</div>
+          </div>
+          <span class="badge badge-green">Active</span>
+        </div>
+        <div style="margin-bottom:12px">
+          <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:600">BATCHES</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            ${c.batches.map(b=>`<span class="badge badge-blue">${b}</span>`).join('')}
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:600">SUBJECTS (${c.subjects.length})</div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap">
+            ${c.subjects.map(s=>`<span class="badge badge-gray" style="font-size:10px">${s}</span>`).join('')}
+          </div>
+        </div>
+        <div class="form-actions" style="margin-top:14px">
+          <button class="btn btn-ghost btn-sm" onclick="showAlert('Add Batch to ${c.name}')">+ Batch</button>
+          <button class="btn btn-ghost btn-sm" onclick="showAlert('Add Subject to ${c.name}')">+ Subject</button>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+// ── ATTENDANCE (Admin) ─────────────────────────────────────
+function renderAdminAttendance() {
+  const today = new Date().toLocaleDateString('en-GB');
+  return `
+  <div class="section-header">
+    <div class="section-title">Attendance — Today (${today})</div>
+    <div class="action-row">
+      <button class="btn btn-success btn-sm" onclick="markAttendanceModal=true;render()">✅ Mark Attendance</button>
+      <button class="btn btn-ghost btn-sm" onclick="showAlert('Exporting attendance PDF...')">⬇️ Export PDF</button>
+    </div>
+  </div>
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+    <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-value">38</div><div class="stat-label">Present Today</div></div>
+    <div class="stat-card" style="border-color:rgba(239,68,68,0.3)"><div class="stat-icon">❌</div><div class="stat-value">7</div><div class="stat-label">Absent Today</div></div>
+    <div class="stat-card gold"><div class="stat-icon">🏖️</div><div class="stat-value">3</div><div class="stat-label">On Leave</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Student Attendance Overview</div>
+      <select style="padding:7px 10px;background:var(--navy);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font);font-size:13px;outline:none">
+        <option>All Classes</option>
+        ${state.classes.map(c=>`<option>${c.name}</option>`).join('')}
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Class</th><th>Present</th><th>Absent</th><th>Leave</th><th>%</th><th>Status</th></tr></thead>
+        <tbody>
+          ${state.students.map(s=>{
+            const total=20,present=Math.round(s.attendance_pct/100*total),absent=Math.floor((100-s.attendance_pct)/100*total*0.7),leave=total-present-absent;
+            return `<tr>
+              <td><div class="td-name">${s.first_name} ${s.last_name}</div><div class="td-id">${s.student_id}</div></td>
+              <td>${s.class_name}</td>
+              <td style="color:var(--green);font-weight:600">${present}</td>
+              <td style="color:var(--red)">${absent}</td>
+              <td style="color:var(--gold)">${leave}</td>
+              <td><span class="badge ${s.attendance_pct>90?'badge-green':s.attendance_pct>75?'badge-blue':'badge-red'}">${s.attendance_pct}%</span></td>
+              <td><div class="progress-bar" style="width:80px"><div class="progress-fill" style="width:${s.attendance_pct}%;background:${s.attendance_pct>90?'var(--green)':s.attendance_pct>75?'var(--blue)':'var(--red)'}"></div></div></td>
+            </tr>`;}).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── MARKS (Admin) ──────────────────────────────────────────
+function renderAdminMarks() {
+  return `
+  <div class="section-header">
+    <div class="section-title">Marks & Results</div>
+    <div class="action-row">
+      <button class="btn btn-primary btn-sm" onclick="enterMarksModal=true;render()">📝 Enter Marks</button>
+      <button class="btn btn-ghost btn-sm" onclick="showAlert('Generating result cards PDF...')">⬇️ Result Cards</button>
+    </div>
+  </div>
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">📋 Exams</div>
+      ${[{name:'Mid-Term 2024',date:'2024-11-15',class:'All Classes',published:true},{name:'Annual Exam 2025',date:'2025-03-15',class:'All Classes',published:false},{name:'Unit Test 1',date:'2024-09-20',class:'Class 10',published:true}].map(e=>`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div>
+            <div style="font-size:13px;font-weight:500">${e.name}</div>
+            <div style="font-size:11px;color:var(--text2)">${e.class} · ${e.date}</div>
+          </div>
+          <span class="badge ${e.published?'badge-green':'badge-gray'}">${e.published?'Published':'Draft'}</span>
+        </div>`).join('')}
+      <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%" onclick="showAlert('Create new exam form')">+ Create Exam</button>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">🏆 Class Rankings — Mid-Term</div>
+      ${state.students.slice(0,5).map((s,i)=>{
+        const avg=Math.round(70+Math.random()*25);
+        return `<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div style="width:24px;height:24px;border-radius:50%;background:${i<3?'rgba(245,158,11,0.2)':'var(--surface3)'};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:${i<3?'var(--gold)':'var(--text2)'};flex-shrink:0">${i+1}</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:500">${s.first_name} ${s.last_name}</div><div style="font-size:11px;color:var(--text2)">${s.class_name}</div></div>
+          <span class="badge ${avg>85?'badge-green':avg>70?'badge-blue':'badge-gold'}">${avg}%</span>
+        </div>`;}).join('')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">📊 Marks Overview — Mid-Term 2024</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Math</th><th>Physics</th><th>Chemistry</th><th>English</th><th>Total</th><th>Grade</th><th>Rank</th></tr></thead>
+        <tbody>
+          ${state.students.map((s,i)=>{
+            const scores=[82+i*2,74+i*3,88-i,70+i*2,80+i];const total=scores.reduce((a,b)=>a+b,0);const pct=Math.round(total/500*100);
+            return `<tr>
+              <td><div class="td-name">${s.first_name} ${s.last_name}</div></td>
+              ${scores.map(sc=>`<td style="font-weight:500;color:${sc>=90?'var(--green)':sc>=70?'var(--blue-light)':'var(--text)'}">${sc}</td>`).join('')}
+              <td style="font-weight:700">${total}<span style="color:var(--text2);font-weight:400;font-size:11px">/500</span></td>
+              <td><span class="grade-pill grade-${pct>=90?'A+':pct>=80?'A':pct>=70?'B':pct>=60?'C':'D'}">${pct>=90?'A+':pct>=80?'A':pct>=70?'B':pct>=60?'C':'D'}</span></td>
+              <td style="color:var(--text2);font-size:12px">#${i+1}</td>
+            </tr>`;}).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── FEES (Admin) ───────────────────────────────────────────
+function renderAdminFees() {
+  return `
+  <div class="section-header">
+    <div class="section-title">Fee Management</div>
+    <div class="action-row">
+      <button class="btn btn-primary btn-sm" onclick="addFeeModal=true;render()">+ Add Fee Record</button>
+      <button class="btn btn-ghost btn-sm" onclick="showAlert('Generating fee report...')">⬇️ Export</button>
+    </div>
+  </div>
+  <div class="stats-grid" style="margin-bottom:20px">
+    <div class="stat-card blue"><div class="stat-icon">💰</div><div class="stat-value">₨ 87K</div><div class="stat-label">Total Due (Jan)</div></div>
+    <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-value">₨ 70K</div><div class="stat-label">Collected</div></div>
+    <div class="stat-card" style="border-color:rgba(239,68,68,0.3)"><div class="stat-icon">⏰</div><div class="stat-value">₨ 17K</div><div class="stat-label">Pending</div></div>
+    <div class="stat-card gold"><div class="stat-icon">📊</div><div class="stat-value">80%</div><div class="stat-label">Collection Rate</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Fee Records</div>
+      <select style="padding:7px 10px;background:var(--navy);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font);font-size:13px;outline:none">
+        <option>All Status</option><option>Paid</option><option>Pending</option><option>Partial</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Fee Type</th><th>Amount</th><th>Paid</th><th>Due Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          ${state.students.map(s=>`
+            <tr>
+              <td><div class="td-name">${s.first_name} ${s.last_name}</div><div class="td-id">${s.student_id}</div></td>
+              <td>Monthly Fee</td>
+              <td style="font-weight:600">₨ ${(s.total_fee/5).toLocaleString()}</td>
+              <td style="color:${s.paid_fee>=s.total_fee?'var(--green)':'var(--gold)'}">₨ ${(s.paid_fee/5).toLocaleString()}</td>
+              <td style="font-size:12px;color:var(--text2)">2025-02-10</td>
+              <td><span class="badge ${s.paid_fee>=s.total_fee?'badge-green':s.paid_fee>0?'badge-gold':'badge-red'}">${s.paid_fee>=s.total_fee?'Paid':s.paid_fee>0?'Partial':'Pending'}</span></td>
+              <td><button class="btn btn-success btn-sm" onclick="showAlert('Record payment for ${s.first_name}')">💳 Pay</button></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── ANNOUNCEMENTS ──────────────────────────────────────────
+function renderAnnouncements() {
+  const isAdmin = state.user.role === 'super_admin';
+  const icons = { exam:'📝', fee:'💳', general:'📢', urgent:'🚨', holiday:'🎉' };
+  return `
+  <div class="section-header">
+    <div class="section-title">Announcements (${state.announcements.length})</div>
+    ${isAdmin ? `<button class="btn btn-primary btn-sm" onclick="addAnnouncementModal=true;render()">+ New Announcement</button>` : ''}
+  </div>
+  ${state.announcements.map(a=>`
+    <div class="ann-item" style="padding:18px">
+      <div class="ann-header">
+        <span style="font-size:20px">${icons[a.type]||'📢'}</span>
+        <div>
+          <div class="ann-title" style="font-size:15px">${a.title}</div>
+          <div style="font-size:11px;color:var(--text2)">By ${a.created_by_email} · ${a.created_at}</div>
+        </div>
+        <span class="badge ${a.type==='exam'?'badge-blue':a.type==='fee'?'badge-gold':a.type==='urgent'?'badge-red':'badge-green'}" style="margin-left:auto">${a.type}</span>
+        ${isAdmin?`<button class="btn btn-danger btn-sm" onclick="deleteAnnouncement(${a.id})">🗑️</button>`:''}
+      </div>
+      <div class="ann-body" style="font-size:13px;line-height:1.6">${a.content}</div>
+    </div>`).join('')}`;
+}
+
+// ── CALENDAR ───────────────────────────────────────────────
+function renderCalendar() {
+  const isAdmin = state.user.role === 'super_admin';
+  const icons = { exam:'📝', holiday:'🎉', event:'🎯', activity:'⚽', meeting:'👥' };
+  const colors = { exam:'exam', holiday:'holiday', event:'event', activity:'event', meeting:'event' };
+  return `
+  <div class="section-header">
+    <div class="section-title">Academic Calendar 2025</div>
+    ${isAdmin?`<button class="btn btn-primary btn-sm" onclick="addCalendarModal=true;render()">+ Add Event</button>`:''}
+  </div>
+  <div class="grid-2">
+    <div>
+      ${state.calendar.map(e=>`
+        <div class="cal-event ${colors[e.event_type]||'event'}" style="margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span>${icons[e.event_type]||'📅'}</span>
+            <strong style="font-size:13px">${e.title}</strong>
+            ${isAdmin?`<button class="btn btn-danger btn-sm" style="margin-left:auto;padding:3px 8px" onclick="deleteCalEvent(${e.id})">×</button>`:''}
+          </div>
+          <div style="font-size:12px;color:var(--text2)">📅 ${e.start_date}${e.end_date?' → '+e.end_date:''}</div>
+          ${e.description?`<div style="font-size:12px;color:var(--text2);margin-top:4px">${e.description}</div>`:''}
+        </div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">📅 February 2025</div>
+      <div class="att-grid" style="margin-bottom:8px">
+        ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class="att-day-label">${d}</div>`).join('')}
+        ${[...Array(4)].map(()=>'<div class="att-day empty"></div>').join('')}
+        ${Array.from({length:28},(_,i)=>{
+          const d=i+1;const isExam=d>=10&&d<=20;const isHol=d===28;
+          return `<div class="att-day ${isExam?'absent':isHol?'leave':'future'}" style="font-size:10px">${d}</div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;gap:12px;font-size:11px;margin-top:8px">
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:rgba(239,68,68,0.2);border-radius:2px;display:inline-block"></span>Exam</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:rgba(245,158,11,0.2);border-radius:2px;display:inline-block"></span>Holiday</span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;background:var(--surface3);border-radius:2px;display:inline-block"></span>Regular</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── REPORTS ────────────────────────────────────────────────
+function renderReports() {
+  return `
+  <div class="section-header">
+    <div class="section-title">Analytics & Reports</div>
+    <div class="action-row">
+      <button class="btn btn-ghost btn-sm" onclick="showAlert('Exporting full report to PDF...')">⬇️ Export PDF</button>
+      <button class="btn btn-ghost btn-sm" onclick="showAlert('Exporting to Excel...')">📊 Export Excel</button>
+    </div>
+  </div>
+  <div class="stats-grid" style="margin-bottom:20px">
+    <div class="stat-card blue"><div class="stat-icon">👨‍🎓</div><div class="stat-value">${state.students.length}</div><div class="stat-label">Total Students</div></div>
+    <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-value">87%</div><div class="stat-label">Avg Attendance</div></div>
+    <div class="stat-card gold"><div class="stat-icon">📝</div><div class="stat-value">B+</div><div class="stat-label">Avg Grade</div></div>
+    <div class="stat-card purple"><div class="stat-icon">💰</div><div class="stat-value">80%</div><div class="stat-label">Fee Collection</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px">📊 Performance Distribution</div>
+      ${[{grade:'A+',count:3,pct:15,col:'var(--green)'},
+         {grade:'A',count:8,pct:32,col:'#34d399'},
+         {grade:'B',count:9,pct:36,col:'var(--blue)'},
+         {grade:'C',count:3,pct:12,col:'var(--gold)'},
+         {grade:'F',count:2,pct:8,col:'var(--red)'}].map(g=>`
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div class="grade-pill grade-${g.grade}" style="flex-shrink:0">${g.grade}</div>
+          <div class="progress-bar" style="flex:1">
+            <div class="progress-fill" style="width:${g.pct}%;background:${g.col}"></div>
+          </div>
+          <div style="font-size:12px;font-weight:500;min-width:30px;text-align:right">${g.count}</div>
+        </div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px">🏛️ Enrollment by Class</div>
+      ${state.classes.map(c=>`
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <div style="font-size:12px;min-width:64px;color:var(--text2)">${c.name}</div>
+          <div class="progress-bar" style="flex:1">
+            <div class="progress-fill" style="width:${Math.round(c.student_count/30*100)}%;background:var(--blue)"></div>
+          </div>
+          <div style="font-size:12px;font-weight:500;min-width:24px;text-align:right">${c.student_count}</div>
+        </div>`).join('')}
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-header">
+      <div class="card-title">📋 Attendance Summary Report</div>
+      <select style="padding:7px 10px;background:var(--navy);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font);font-size:13px;outline:none">
+        <option>January 2025</option><option>December 2024</option><option>November 2024</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Student</th><th>Class</th><th>Present</th><th>Absent</th><th>Leave</th><th>Attendance %</th></tr></thead>
+        <tbody>
+          ${state.students.map(s=>{
+            const p=Math.round(s.attendance_pct/100*26),a=Math.floor((100-s.attendance_pct)/100*26*0.7),l=26-p-a;
+            return `<tr>
+              <td class="td-name">${s.first_name} ${s.last_name}</td>
+              <td>${s.class_name}</td>
+              <td style="color:var(--green);font-weight:600">${p}</td>
+              <td style="color:var(--red)">${a}</td>
+              <td style="color:var(--gold)">${l}</td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="progress-bar" style="width:60px"><div class="progress-fill" style="width:${s.attendance_pct}%;background:${s.attendance_pct>90?'var(--green)':s.attendance_pct>75?'var(--blue)':'var(--red)'}"></div></div>
+                  <span style="font-size:12px;font-weight:600">${s.attendance_pct}%</span>
+                </div>
+              </td>
+            </tr>`;}).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── SETTINGS ───────────────────────────────────────────────
+function renderSettings() {
+  return `
+  <div class="tabs">
+    ${['general','security','backup'].map(t=>`<div class="tab ${settingsTab===t?'active':''}" onclick="settingsTab='${t}';render()">${t==='general'?'⚙️ General':t==='security'?'🔐 Security':'💾 Backup'}</div>`).join('')}
+  </div>
+  ${settingsTab==='general'?`
+  <div class="card" style="max-width:640px">
+    <div class="card-title" style="margin-bottom:20px">🏫 Center Information</div>
+    <div class="form-group"><label>Center Name</label><input value="${state.settings.center_name}" onchange="state.settings.center_name=this.value"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Contact Number</label><input value="${state.settings.contact_number}"></div>
+      <div class="form-group"><label>Email</label><input type="email" value="${state.settings.email}"></div>
+    </div>
+    <div class="form-group"><label>Website</label><input value="${state.settings.website}"></div>
+    <div class="form-group"><label>Address</label><textarea style="resize:vertical">${state.settings.address}</textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>Facebook</label><input value="${state.settings.facebook}" placeholder="fb.com/yourpage"></div>
+      <div class="form-group"><label>WhatsApp</label><input value="${state.settings.whatsapp}" placeholder="+92-xxx"></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="showAlert('Settings saved successfully! ✅')">💾 Save Settings</button>
+    </div>
+  </div>`:settingsTab==='security'?`
+  <div class="card" style="max-width:640px">
+    <div class="card-title" style="margin-bottom:20px">🔐 Security Settings</div>
+    <div class="alert alert-info">Enterprise-level security features are active. All settings below are enforced system-wide.</div>
+    ${[
+      {icon:'✅',label:'JWT Authentication',desc:'Tokens expire in 24h, refresh tokens in 7d'},
+      {icon:'🔒',label:'bcrypt Password Hashing',desc:'12 salt rounds — NIST compliant'},
+      {icon:'🛡️',label:'SQL Injection Protection',desc:'All queries use prepared statements'},
+      {icon:'🚫',label:'XSS Protection',desc:'Helmet.js enforces CSP headers'},
+      {icon:'🔄',label:'CSRF Protection',desc:'Origin validation on all mutations'},
+      {icon:'⏱️',label:'Rate Limiting',desc:'100 req/15min globally, 20 for auth routes'},
+      {icon:'📊',label:'Audit Logging',desc:'All admin actions are logged with IP'},
+      {icon:'⏰',label:'Session Timeout',desc:'Auto-logout after 30 minutes of inactivity'},
+    ].map(f=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:8px;background:var(--surface2);margin-bottom:8px">
+        <span style="font-size:20px">${f.icon}</span>
+        <div><div style="font-size:13px;font-weight:500">${f.label}</div><div style="font-size:11px;color:var(--text2)">${f.desc}</div></div>
+        <span class="badge badge-green" style="margin-left:auto">Active</span>
+      </div>`).join('')}
+  </div>`:`
+  <div class="card" style="max-width:640px">
+    <div class="card-title" style="margin-bottom:20px">💾 Backup & Restore</div>
+    <div class="alert alert-info">Regular backups protect your data. Configure automated backups below.</div>
+    <div class="form-group"><label>Backup Frequency</label>
+      <select><option>Daily</option><option>Weekly</option><option>Monthly</option></select>
+    </div>
+    <div class="form-group"><label>Backup Time</label><input type="time" value="02:00"></div>
+    <div class="form-actions" style="justify-content:flex-start;gap:10px">
+      <button class="btn btn-primary" onclick="showAlert('Manual backup started... ✅')">💾 Backup Now</button>
+      <button class="btn btn-ghost" onclick="showAlert('Restore feature — select backup file')">📂 Restore</button>
+    </div>
+    <div class="divider"></div>
+    <div class="card-title" style="margin-bottom:12px">📦 Export Data</div>
+    <div class="action-row">
+      <button class="btn btn-ghost" onclick="showAlert('Exporting all data to JSON...')">📤 Export JSON</button>
+      <button class="btn btn-ghost" onclick="showAlert('Exporting to Excel...')">📊 Export Excel</button>
+      <button class="btn btn-ghost" onclick="showAlert('Generating full PDF report...')">📄 Export PDF</button>
+    </div>
+  </div>`}`;
+}
+
+// ── AUDIT ──────────────────────────────────────────────────
+function renderAudit() {
+  const logs = [
+    { action:'LOGIN_SUCCESS', entity:'user', user:'admin@jecr.edu.pk', ip:'192.168.1.1', time:'2025-01-20 09:15:22' },
+    { action:'STUDENT_CREATED', entity:'student', user:'admin@jecr.edu.pk', ip:'192.168.1.1', time:'2025-01-20 09:30:11' },
+    { action:'ATTENDANCE_MARKED', entity:'attendance', user:'admin@jecr.edu.pk', ip:'192.168.1.1', time:'2025-01-20 10:00:00' },
+    { action:'MARKS_ENTERED', entity:'marks', user:'admin@jecr.edu.pk', ip:'192.168.1.1', time:'2025-01-20 11:15:44' },
+    { action:'FEE_RECORDED', entity:'fee', user:'admin@jecr.edu.pk', ip:'192.168.1.1', time:'2025-01-20 12:05:30' },
+    { action:'PASSWORD_CHANGED', entity:'user', user:'ahmad@demo.com', ip:'192.168.1.100', time:'2025-01-19 15:22:10' },
+    { action:'LOGIN_FAILED', entity:'user', user:'unknown@x.com', ip:'45.33.22.11', time:'2025-01-19 03:12:55' },
+  ];
+  return `
+  <div class="section-header">
+    <div class="section-title">Audit Logs</div>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Action</th><th>Entity</th><th>User</th><th>IP Address</th><th>Time</th><th>Status</th></tr></thead>
+        <tbody>
+          ${logs.map(l=>`
+            <tr>
+              <td style="font-family:var(--mono);font-size:11px">${l.action}</td>
+              <td><span class="badge badge-gray" style="font-size:10px">${l.entity}</span></td>
+              <td style="font-size:12px">${l.user}</td>
+              <td style="font-family:var(--mono);font-size:11px;color:var(--text2)">${l.ip}</td>
+              <td style="font-size:11px;color:var(--text2)">${l.time}</td>
+              <td><span class="badge ${l.action.includes('FAIL')?'badge-red':'badge-green'}">${l.action.includes('FAIL')?'Failed':'Success'}</span></td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── STUDENT DASHBOARD ──────────────────────────────────────
+function renderStudentDashboard() {
+  const s = state.students[0];
+  return `
+  <div class="profile-header">
+    <div class="profile-avatar">${s.first_name.charAt(0)}</div>
+    <div class="profile-info">
+      <h2>${s.first_name} ${s.last_name}</h2>
+      <p>📚 ${s.class_name} · ${s.batch_name}</p>
+      <div class="profile-badges">
+        <span class="badge badge-blue">ID: ${s.student_id}</span>
+        <span class="badge badge-purple">Roll #${s.roll_number}</span>
+        <span class="badge badge-green">✓ Active</span>
+      </div>
+    </div>
+  </div>
+  <div class="stats-grid" style="margin-bottom:20px">
+    <div class="stat-card blue"><div class="stat-icon">✅</div><div class="stat-value">${s.attendance_pct}%</div><div class="stat-label">Attendance</div></div>
+    <div class="stat-card green"><div class="stat-icon">📝</div><div class="stat-value">82%</div><div class="stat-label">Avg Score</div></div>
+    <div class="stat-card gold"><div class="stat-icon">💳</div><div class="stat-value">₨${(s.paid_fee).toLocaleString()}</div><div class="stat-label">Fee Paid</div></div>
+    <div class="stat-card purple"><div class="stat-icon">🏆</div><div class="stat-value">#2</div><div class="stat-label">Class Rank</div></div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">📊 Recent Marks</div>
+        <button class="btn btn-ghost btn-sm" onclick="navigate('marks')">View All</button>
+      </div>
+      ${state.marks.map(m=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:500">${m.subject}</div>
+            <div style="font-size:11px;color:var(--text2)">${m.exam}</div>
+          </div>
+          <div class="progress-bar" style="width:80px"><div class="progress-fill" style="width:${m.percentage}%;background:${m.percentage>=80?'var(--green)':'var(--blue)'}"></div></div>
+          <div class="grade-pill grade-${m.grade}">${m.grade}</div>
+        </div>`).join('')}
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="margin-bottom:12px">💳 Fee Status</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="fee-card"><div class="fee-label">Total Fee</div><div class="fee-amount">₨ ${s.total_fee.toLocaleString()}</div></div>
+          <div class="fee-card"><div class="fee-label">Paid</div><div class="fee-amount" style="color:var(--green)">₨ ${s.paid_fee.toLocaleString()}</div></div>
+        </div>
+        <div style="margin-top:10px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">
+            <span>Collection Progress</span><span>${Math.round(s.paid_fee/s.total_fee*100)}%</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(s.paid_fee/s.total_fee*100)}%;background:var(--green)"></div></div>
+        </div>
+        ${s.paid_fee<s.total_fee?`<div class="alert alert-error" style="margin-top:10px;font-size:12px">⚠️ Pending: ₨ ${(s.total_fee-s.paid_fee).toLocaleString()} — Due: Feb 10</div>`:''}
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:10px">📢 Latest Notices</div>
+        ${state.announcements.slice(0,2).map(a=>`
+          <div class="ann-item" style="padding:10px">
+            <div class="ann-title">${a.title}</div>
+            <div class="ann-body" style="font-size:11px">${a.content.substring(0,60)}...</div>
+          </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderStudentProfile() {
+  const s = state.students[0];
+  return `
+  <div class="profile-header">
+    <div class="profile-avatar" style="width:90px;height:90px;font-size:32px">${s.first_name.charAt(0)}</div>
+    <div class="profile-info">
+      <h2>${s.first_name} ${s.last_name}</h2>
+      <p>${s.email}</p>
+      <div class="profile-badges">
+        <span class="badge badge-blue">${s.student_id}</span>
+        <span class="badge badge-purple">Roll #${s.roll_number}</span>
+      </div>
+    </div>
+    <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="showAlert('Update profile picture')">📷 Change Photo</button>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px">Personal Information</div>
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">Full Name</div><div class="info-value">${s.first_name} ${s.last_name}</div></div>
+        <div class="info-item"><div class="info-label">Date of Birth</div><div class="info-value">${s.date_of_birth}</div></div>
+        <div class="info-item"><div class="info-label">Gender</div><div class="info-value" style="text-transform:capitalize">${s.gender}</div></div>
+        <div class="info-item"><div class="info-label">Student ID</div><div class="info-value" style="font-family:var(--mono);font-size:12px">${s.student_id}</div></div>
+        <div class="info-item"><div class="info-label">Admission Date</div><div class="info-value">${s.admission_date}</div></div>
+        <div class="info-item"><div class="info-label">Class / Batch</div><div class="info-value">${s.class_name} · ${s.batch_name}</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="card-title" style="margin-bottom:12px">Contact Information</div>
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">Student Contact</div><div class="info-value">${s.student_contact}</div></div>
+        <div class="info-item"><div class="info-label">Parent Name</div><div class="info-value">${s.parent_name}</div></div>
+        <div class="info-item"><div class="info-label">Parent Contact</div><div class="info-value">${s.parent_contact}</div></div>
+        <div class="info-item" style="grid-column:span 3"><div class="info-label">Home Address</div><div class="info-value">${s.home_address}</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title" style="margin-bottom:16px">🔒 Change Password</div>
+        <div class="form-group"><label>Current Password</label><input type="password" placeholder="Enter current password"></div>
+        <div class="form-group"><label>New Password</label><input type="password" placeholder="Min 8 chars"></div>
+        <div class="form-group"><label>Confirm New Password</label><input type="password" placeholder="Re-enter new password"></div>
+        <button class="btn btn-primary" onclick="showAlert('Password changed successfully! ✅')">🔒 Update Password</button>
+      </div>
+      <div class="card">
+        <div class="card-title" style="margin-bottom:12px">🪪 Student ID Card</div>
+        <div id="id-card-preview">
+          ${renderIdCard(s)}
+        </div>
+        <button class="btn btn-ghost" style="width:100%;margin-top:12px" onclick="showAlert('ID Card downloading as PDF...')">⬇️ Download ID Card</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderStudentAttendance() {
+  const s = state.students[0];
+  const pct = s.attendance_pct;
+  const present = Math.round(pct/100*26), absent = Math.floor((100-pct)/100*26*0.7), leave = 26-present-absent;
+  return `
+  <div class="profile-header" style="padding:20px">
+    <div style="flex:1">
+      <h2 style="font-size:16px;margin-bottom:4px">Attendance — ${s.first_name} ${s.last_name}</h2>
+      <p style="font-size:13px;color:var(--text2)">${s.student_id} · ${s.class_name}</p>
+    </div>
+    <div style="text-align:center">
+      <div style="font-size:36px;font-weight:800;color:${pct>90?'var(--green)':pct>75?'var(--blue-light)':'var(--red)'}">${pct}%</div>
+      <div style="font-size:12px;color:var(--text2)">Overall Attendance</div>
+    </div>
+  </div>
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+    <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-value">${present}</div><div class="stat-label">Present Days</div></div>
+    <div class="stat-card" style="border-color:rgba(239,68,68,0.3)"><div class="stat-icon">❌</div><div class="stat-value">${absent}</div><div class="stat-label">Absent Days</div></div>
+    <div class="stat-card gold"><div class="stat-icon">🏖️</div><div class="stat-value">${leave}</div><div class="stat-label">Leave Days</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">📅 January 2025 — Attendance Calendar</div>
+      <select style="padding:7px 10px;background:var(--navy);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:var(--font);font-size:13px;outline:none">
+        <option>January 2025</option><option>December 2024</option><option>November 2024</option>
+      </select>
+    </div>
+    <div class="att-grid" style="margin-bottom:10px">
+      ${['M','T','W','T','F','S','S'].map(d=>`<div class="att-day-label">${d}</div>`).join('')}
+      ${Array.from({length:31},(_,i)=>{
+        const statuses=['present','present','absent','present','leave','present','present','present','absent','present','present','present','present','present','present','absent','present','present','present','present','present','leave','present','present','absent','present','present','present','present','present','present'];
+        const st=statuses[i]||'future';
+        return `<div class="att-day ${st}">${i+1}</div>`;
+      }).join('')}
+    </div>
+    <div style="display:flex;gap:16px;font-size:12px;margin-top:8px">
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;background:rgba(16,185,129,0.2);border-radius:3px;display:inline-block"></span>Present</span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;background:rgba(239,68,68,0.2);border-radius:3px;display:inline-block"></span>Absent</span>
+      <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;background:rgba(245,158,11,0.2);border-radius:3px;display:inline-block"></span>Leave</span>
+    </div>
+  </div>`;
+}
+
+function renderStudentMarks() {
+  const total = state.marks.reduce((a,m)=>a+m.obtained,0);
+  const max = state.marks.reduce((a,m)=>a+m.total,0);
+  const pct = Math.round(total/max*100);
+  return `
+  <div class="section-header">
+    <div class="section-title">My Results</div>
+    <button class="btn btn-ghost btn-sm" onclick="showAlert('Downloading result card...')">⬇️ Download Result Card</button>
+  </div>
+  <div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+    <div class="stat-card blue"><div class="stat-icon">📊</div><div class="stat-value">${pct}%</div><div class="stat-label">Overall Score</div></div>
+    <div class="stat-card green"><div class="stat-icon">🏆</div><div class="stat-value">A</div><div class="stat-label">Overall Grade</div></div>
+    <div class="stat-card purple"><div class="stat-icon">🥇</div><div class="stat-value">#2</div><div class="stat-label">Class Rank</div></div>
+    <div class="stat-card gold"><div class="stat-icon">✅</div><div class="stat-value">${state.marks.filter(m=>m.obtained>=40).length}/${state.marks.length}</div><div class="stat-label">Subjects Passed</div></div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">📝 Mid-Term 2024 — Detailed Results</div>
+      <span class="badge badge-green">Published</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Subject</th><th>Marks Obtained</th><th>Total Marks</th><th>Percentage</th><th>Grade</th><th>Status</th><th>Performance</th></tr></thead>
+        <tbody>
+          ${state.marks.map(m=>`
+            <tr>
+              <td style="font-weight:500">${m.subject}</td>
+              <td style="font-size:16px;font-weight:700;color:${m.obtained>=80?'var(--green)':m.obtained>=60?'var(--blue-light)':'var(--gold)'}">${m.obtained}</td>
+              <td style="color:var(--text2)">${m.total}</td>
+              <td>${m.percentage}%</td>
+              <td><div class="grade-pill grade-${m.grade}">${m.grade}</div></td>
+              <td><span class="badge ${m.obtained>=40?'badge-green':'badge-red'}">${m.obtained>=40?'✓ Pass':'✗ Fail'}</span></td>
+              <td><div class="progress-bar" style="width:100px"><div class="progress-fill" style="width:${m.percentage}%;background:${m.percentage>=80?'var(--green)':m.percentage>=60?'var(--blue)':'var(--gold)'}"></div></div></td>
+            </tr>`).join('')}
+          <tr style="border-top:2px solid var(--border2)">
+            <td style="font-weight:700">TOTAL</td>
+            <td style="font-size:16px;font-weight:800;color:var(--blue-light)">${total}</td>
+            <td style="font-weight:600">${max}</td>
+            <td style="font-weight:700">${pct}%</td>
+            <td><div class="grade-pill grade-A">A</div></td>
+            <td><span class="badge badge-green">✓ Pass</span></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+function renderStudentFees() {
+  const s = state.students[0];
+  const myFees = state.fees.filter(f=>f.student_id===1);
+  const totalFee = myFees.reduce((a,f)=>a+f.amount,0);
+  const paidFee = myFees.reduce((a,f)=>a+f.paid_amount,0);
+  return `
+  <div class="section-header"><div class="section-title">My Fee Records</div></div>
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+    <div class="stat-card blue"><div class="stat-icon">💰</div><div class="stat-value">₨${totalFee.toLocaleString()}</div><div class="stat-label">Total Fee</div></div>
+    <div class="stat-card green"><div class="stat-icon">✅</div><div class="stat-value">₨${paidFee.toLocaleString()}</div><div class="stat-label">Paid</div></div>
+    <div class="stat-card" style="border-color:rgba(239,68,68,0.3)"><div class="stat-icon">⏰</div><div class="stat-value">₨${(totalFee-paidFee).toLocaleString()}</div><div class="stat-label">Pending</div></div>
+  </div>
+  ${totalFee>paidFee?`<div class="alert alert-error">⚠️ You have a pending fee of ₨ ${(totalFee-paidFee).toLocaleString()}. Please pay by the due date to avoid late charges.</div>`:''}
+  <div class="card">
+    <div class="card-header"><div class="card-title">Payment History</div></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Fee Type</th><th>Month</th><th>Amount</th><th>Paid</th><th>Due Date</th><th>Paid Date</th><th>Status</th><th>Receipt</th></tr></thead>
+        <tbody>
+          ${myFees.map(f=>`
+            <tr>
+              <td style="font-weight:500">${f.fee_type}</td>
+              <td style="font-size:12px;color:var(--text2)">${f.month_year||'—'}</td>
+              <td style="font-weight:600">₨ ${f.amount.toLocaleString()}</td>
+              <td style="color:${f.paid_amount>0?'var(--green)':'var(--text2)'}">₨ ${f.paid_amount.toLocaleString()}</td>
+              <td style="font-size:12px">${f.due_date}</td>
+              <td style="font-size:12px;color:var(--text2)">${f.paid_date||'—'}</td>
+              <td><span class="badge ${f.status==='paid'?'badge-green':f.status==='partial'?'badge-gold':'badge-red'}">${f.status}</span></td>
+              <td style="font-family:var(--mono);font-size:11px;color:var(--text2)">${f.receipt_number}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ── ID CARD ────────────────────────────────────────────────
+function renderIdCard(s) {
+  return `
+  <div class="id-card">
+    <div class="id-card-logo">🏫 JHATAIL EDUCATIONAL COACHING CENTER RADHAN</div>
+    <div class="qr-block">🔳</div>
+    <div class="id-card-photo">${s.first_name.charAt(0)}</div>
+    <div class="id-card-name">${s.first_name} ${s.last_name}</div>
+    <div class="id-card-class">${s.class_name} · ${s.batch_name}</div>
+    <div class="id-card-field"><span class="id-card-field-label">ID</span><span class="id-card-field-val">${s.student_id}</span></div>
+    <div class="id-card-field"><span class="id-card-field-label">Roll No.</span><span class="id-card-field-val">${s.roll_number}</span></div>
+    <div class="id-card-field"><span class="id-card-field-label">Contact</span><span class="id-card-field-val">${s.student_contact}</span></div>
+    <div class="id-card-bottom">Valid for Academic Session 2024–25 · Radhan, Punjab</div>
+  </div>`;
+}
+
+// ── MODALS ─────────────────────────────────────────────────
+function renderModal() {
+  if (addStudentModal) return `
+  <div class="modal-overlay" onclick="if(event.target.classList.contains('modal-overlay')){addStudentModal=false;render()}">
+    <div class="modal">
+      <div class="modal-title">👨‍🎓 Add New Student</div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name *</label><input placeholder="Ahmad"></div>
+        <div class="form-group"><label>Last Name *</label><input placeholder="Raza"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email *</label><input type="email" placeholder="student@email.com"></div>
+        <div class="form-group"><label>Password *</label><input type="password" placeholder="Min 8 chars"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Class *</label>
+          <select>${state.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select>
+        </div>
+        <div class="form-group"><label>Batch</label>
+          <select><option>Morning Batch</option><option>Evening Batch</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Date of Birth</label><input type="date"></div>
+        <div class="form-group"><label>Gender</label>
+          <select><option>male</option><option>female</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Roll Number</label><input placeholder="01"></div>
+        <div class="form-group"><label>Student Contact</label><input placeholder="0300-0000000"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Parent Name</label><input placeholder="Father/Guardian name"></div>
+        <div class="form-group"><label>Parent Contact</label><input placeholder="0300-0000000"></div>
+      </div>
+      <div class="form-group"><label>Home Address</label><textarea placeholder="Full home address"></textarea></div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="addStudentModal=false;render()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveStudent()">✅ Add Student</button>
+      </div>
+    </div>
+  </div>`;
+
+  if (addAnnouncementModal) return `
+  <div class="modal-overlay" onclick="if(event.target.classList.contains('modal-overlay')){addAnnouncementModal=false;render()}">
+    <div class="modal">
+      <div class="modal-title">📢 New Announcement</div>
+      <div class="form-group"><label>Title *</label><input id="ann-title" placeholder="Announcement title"></div>
+      <div class="form-group"><label>Type</label>
+        <select id="ann-type"><option value="general">General</option><option value="exam">Exam</option><option value="fee">Fee</option><option value="holiday">Holiday</option><option value="urgent">Urgent</option></select>
+      </div>
+      <div class="form-group"><label>Content *</label><textarea id="ann-body" style="min-height:120px" placeholder="Announcement details..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Target Class (optional)</label>
+          <select id="ann-class"><option value="">All Classes</option>${state.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('')}</select>
+        </div>
+        <div class="form-group"><label>Expires (optional)</label><input type="datetime-local" id="ann-exp"></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="addAnnouncementModal=false;render()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveAnnouncement()">📢 Publish</button>
+      </div>
+    </div>
+  </div>`;
+
+  if (viewStudentId) {
+    const s = state.students.find(st=>st.id===viewStudentId);
+    if (!s) return '';
+    return `
+    <div class="modal-overlay" onclick="if(event.target.classList.contains('modal-overlay')){viewStudentId=null;render()}">
+      <div class="modal" style="max-width:640px">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+          <div class="profile-avatar" style="width:60px;height:60px;font-size:20px">${s.first_name.charAt(0)}</div>
+          <div>
+            <div style="font-size:18px;font-weight:700">${s.first_name} ${s.last_name}</div>
+            <div style="font-size:13px;color:var(--text2)">${s.email} · ${s.student_id}</div>
+            <div style="display:flex;gap:6px;margin-top:6px">
+              <span class="badge badge-blue">${s.class_name}</span>
+              <span class="badge badge-purple">${s.batch_name}</span>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="viewStudentId=null;render()">✕</button>
+        </div>
+        <div class="info-grid">
+          <div class="info-item"><div class="info-label">Roll No.</div><div class="info-value">${s.roll_number}</div></div>
+          <div class="info-item"><div class="info-label">Date of Birth</div><div class="info-value">${s.date_of_birth}</div></div>
+          <div class="info-item"><div class="info-label">Gender</div><div class="info-value">${s.gender}</div></div>
+          <div class="info-item"><div class="info-label">Admission Date</div><div class="info-value">${s.admission_date}</div></div>
+          <div class="info-item"><div class="info-label">Parent</div><div class="info-value">${s.parent_name}</div></div>
+          <div class="info-item"><div class="info-label">Parent Contact</div><div class="info-value">${s.parent_contact}</div></div>
+          <div class="info-item"><div class="info-label">Student Contact</div><div class="info-value">${s.student_contact}</div></div>
+          <div class="info-item" style="grid-column:span 2"><div class="info-label">Address</div><div class="info-value">${s.home_address}</div></div>
+          <div class="info-item"><div class="info-label">Attendance</div><div class="info-value"><span class="badge ${s.attendance_pct>90?'badge-green':s.attendance_pct>75?'badge-blue':'badge-red'}">${s.attendance_pct}%</span></div></div>
+          <div class="info-item"><div class="info-label">Fee Status</div><div class="info-value"><span class="badge ${s.paid_fee>=s.total_fee?'badge-green':s.paid_fee>0?'badge-gold':'badge-red'}">${s.paid_fee>=s.total_fee?'Paid':'Partial'}</span></div></div>
+          <div class="info-item"><div class="info-label">Total Fee</div><div class="info-value">₨ ${s.total_fee.toLocaleString()}</div></div>
+        </div>
+        <div style="margin-top:20px">
+          ${renderIdCard(s)}
+        </div>
+        <div class="form-actions" style="margin-top:16px">
+          <button class="btn btn-ghost" onclick="viewStudentId=null;render()">Close</button>
+          <button class="btn btn-primary btn-sm" onclick="showAlert('Downloading ID Card...')">⬇️ Download ID Card</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  if (markAttendanceModal) return `
+  <div class="modal-overlay">
+    <div class="modal" style="max-width:640px">
+      <div class="modal-title">✅ Mark Attendance — ${new Date().toLocaleDateString('en-GB')}</div>
+      <div style="margin-bottom:12px;display:flex;gap:8px">
+        <button class="btn btn-success btn-sm" onclick="showAlert('All marked Present')">✅ All Present</button>
+        <button class="btn btn-ghost btn-sm" onclick="showAlert('Reset attendance')">↺ Reset</button>
+      </div>
+      <div class="table-wrap" style="max-height:300px;overflow-y:auto">
+        <table>
+          <thead><tr><th>Student</th><th>Class</th><th>Present</th><th>Absent</th><th>Leave</th></tr></thead>
+          <tbody>
+            ${state.students.map(s=>`
+              <tr>
+                <td><div class="td-name">${s.first_name} ${s.last_name}</div><div class="td-id">${s.student_id}</div></td>
+                <td>${s.class_name}</td>
+                <td><input type="radio" name="att-${s.id}" value="present" checked></td>
+                <td><input type="radio" name="att-${s.id}" value="absent"></td>
+                <td><input type="radio" name="att-${s.id}" value="leave"></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="markAttendanceModal=false;render()">Cancel</button>
+        <button class="btn btn-primary" onclick="markAttendanceModal=false;showAlert('Attendance saved for ${state.students.length} students! ✅');render()">💾 Save Attendance</button>
+      </div>
+    </div>
+  </div>`;
+
+  if (addCalendarModal) return `
+  <div class="modal-overlay" onclick="if(event.target.classList.contains('modal-overlay')){addCalendarModal=false;render()}">
+    <div class="modal">
+      <div class="modal-title">📅 Add Calendar Event</div>
+      <div class="form-group"><label>Title *</label><input id="cal-title" placeholder="Event title"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Type</label>
+          <select id="cal-type"><option value="exam">Exam</option><option value="holiday">Holiday</option><option value="event">Event</option><option value="meeting">Meeting</option></select>
+        </div>
+        <div class="form-group"><label>Class (optional)</label>
+          <select><option value="">All Classes</option>${state.classes.map(c=>`<option>${c.name}</option>`).join('')}</select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Start Date *</label><input type="date" id="cal-start"></div>
+        <div class="form-group"><label>End Date</label><input type="date" id="cal-end"></div>
+      </div>
+      <div class="form-group"><label>Description</label><textarea placeholder="Event details..."></textarea></div>
+      <div class="form-actions">
+        <button class="btn btn-ghost" onclick="addCalendarModal=false;render()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveCalEvent()">📅 Add Event</button>
+      </div>
+    </div>
+  </div>`;
+
+  return '';
+}
+
+// ── ACTIONS ────────────────────────────────────────────────
+function navigate(nav) {
+  state.activeNav = nav;
+  selectedClassFilter = '';
+  render();
+}
+
+function viewStudent(id) {
+  viewStudentId = id;
+  render();
+}
+
+function generateIdCard(id) {
+  viewStudentId = id;
+  render();
+}
+
+function deleteStudent(id) {
+  if (confirm('Deactivate this student?')) {
+    state.students = state.students.filter(s => s.id !== id);
+    render();
+    showAlert('Student record deactivated.');
+  }
+}
+
+function deleteAnnouncement(id) {
+  state.announcements = state.announcements.filter(a => a.id !== id);
+  render();
+}
+
+function deleteCalEvent(id) {
+  state.calendar = state.calendar.filter(e => e.id !== id);
+  render();
+}
+
+function saveStudent() {
+  const newId = Math.max(...state.students.map(s=>s.id)) + 1;
+  state.students.push({
+    id: newId, student_id: `JECR-25-${1000+newId}`,
+    first_name: 'New', last_name: 'Student',
+    email: 'new@demo.com', class_name: 'Class 10', batch_name: 'Morning Batch',
+    gender: 'male', roll_number: String(newId),
+    parent_name: 'Parent Name', parent_contact: '0300-0000000',
+    student_contact: '0311-0000000', admission_date: new Date().toISOString().split('T')[0],
+    date_of_birth: '2009-01-01', attendance_pct: 0, total_fee: 15000, paid_fee: 0,
+    home_address: 'Radhan, Punjab'
+  });
+  addStudentModal = false;
+  render();
+  showAlert('Student added successfully! ✅');
+}
+
+function saveAnnouncement() {
+  const title = document.getElementById('ann-title')?.value;
+  const content = document.getElementById('ann-body')?.value;
+  const type = document.getElementById('ann-type')?.value;
+  if (!title || !content) { alert('Title and content required'); return; }
+  state.announcements.unshift({
+    id: Date.now(), title, content, type,
+    created_at: new Date().toISOString().split('T')[0],
+    created_by_email: state.user.email
+  });
+  addAnnouncementModal = false;
+  render();
+  showAlert('Announcement published! ✅');
+}
+
+function saveCalEvent() {
+  const title = document.getElementById('cal-title')?.value;
+  const start = document.getElementById('cal-start')?.value;
+  const type = document.getElementById('cal-type')?.value;
+  if (!title || !start) { alert('Title and start date required'); return; }
+  state.calendar.push({ id: Date.now(), title, event_type: type, start_date: start, end_date: document.getElementById('cal-end')?.value || null, description: '' });
+  addCalendarModal = false;
+  render();
+  showAlert('Event added! ✅');
+}
+
+function updatePage() {
+  const page = document.getElementById('page-content');
+  if (page) page.innerHTML = renderPage();
+  bindPageActions();
+}
+
+function showAlert(msg) {
+  const div = document.createElement('div');
+  div.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px 20px;color:var(--text);font-family:var(--font);font-size:13px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.4);max-width:300px;animation:slideIn 0.3s ease';
+  div.innerHTML = msg;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 3000);
+}
+
+function bindApp() { bindPageActions(); }
+function bindPageActions() {}
+
+// Init
+render();
+</script>
